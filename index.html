@@ -567,18 +567,18 @@
         <div class="card exact-card">
           <div class="card-header">
             <div class="card-header-top">
-              <span class="card-title">Точные фразы</span>
+              <span class="card-title">Фиксированные формы</span>
               <div class="card-tools">
-                <select class="list-select" title="Вставить список">
-                  <option value="">Вставить...</option>
-                </select>
+                <select class="list-select" title="Вставить список"
+                  ><option value="">Вставить...</option></select
+                >
                 <button class="btn-icon btn-save-list" title="Сохранить в библиотеку">💾</button>
               </div>
             </div>
-            <div class="card-hint">Пример: "купить авто"</div>
+            <div class="card-hint">Фиксация словоформ: (!слово1 !слово2|!слово3)</div>
           </div>
           <div class="card-body">
-            <textarea id="exactPhrasesInput" class="word-input save-target" data-save-id="exact-0"></textarea>
+            <textarea id="exactPhrasesInput" class="word-input save-target" data-save-id="exact-0" placeholder="Авто инструкторы&#10;Авто школы&#10;Автошкола рядом"></textarea>
           </div>
           <div class="card-footer"><span class="count">0</span> строк</div>
         </div>
@@ -1192,8 +1192,29 @@
         // --- Generator ---
         function generateQuery() {
           const parts = [];
+
+          // Фиксированные формы слов: добавляем ! перед каждым словом
           const exact = cleanLines(document.getElementById("exactPhrasesInput").value);
-          if (exact.length) parts.push(`(${exact.map((l) => (l.includes('"') ? l : `"${l}"`)).join("|")})`);
+          if (exact.length) {
+            const fixedPhrases = exact.map((phrase) => {
+              // Разбиваем фразу на слова и добавляем ! перед каждым
+              return phrase
+                .split(/\s+/)
+                .map((word) => {
+                  // Если ! уже есть, не дублируем
+                  return word.startsWith("!") ? word : `!${word}`;
+                })
+                .join(" ");
+            });
+
+            if (fixedPhrases.length === 1) {
+              // Одна фраза - без скобок
+              parts.push(fixedPhrases[0]);
+            } else {
+              // Несколько фраз - группируем через |
+              parts.push(`(${fixedPhrases.join("|")})`);
+            }
+          }
           document.querySelectorAll("#dynamicListsWrapper textarea").forEach((ta) => {
             const l = cleanLines(ta.value);
             if (l.length) parts.push(`(${l.join("|")})`);
@@ -1233,6 +1254,7 @@
     </script>
   </body>
 </html>
+
 
 
 
