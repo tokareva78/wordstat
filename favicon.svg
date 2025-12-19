@@ -1,0 +1,6 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Красный фон (стиль Яндекса) -->
+  <rect width="64" height="64" rx="16" fill="#FF3333"/>
+  <!-- Желтая молния (Энергия/PRO) -->
+  <path d="M36 4L22 34H34L28 60L42 30H30L36 4Z" fill="#FFCC00" stroke="#FFCC00" stroke-width="2" stroke-linejoin="round"/>
+</svg>
